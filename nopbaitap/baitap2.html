@@ -8,16 +8,13 @@
 <body>
     <script>
         function is_usZipCode(str) {
-            regexp = /^[0-9]{5}(?:-[0-9]{4})?$/;
-            if (regexp.test(str)) {
-                return true;
-            }
-            return false;
+            const regexp = /^[0-9]{5}(?:-[0-9]{4})?$/;
+            return regexp.test(str);
         }
 
-        var zipcode = "03201 - 2150"
+        var zipcode = "00000 - 12345"
         console.log(is_usZipCode(zipcode));
-        zipcode = '7892';
+        zipcode = '21000';
         console.log(is_usZipCode(zipcode));
     </script>
 </body>
