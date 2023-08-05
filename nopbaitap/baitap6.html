@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    th {
+        width: 300px;
+        height: 20px;
+    }
+
+    table {
+        width: 550px;
+    }
+
+    tr {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <h1>Danh sách sở thú</h1>
+    <button onclick="showAnimal()" id="btnHienthi">Hiển thị danh sách</button>
+    <button onclick="addAnimal()" id="btnAdd">Thêm Động vật</button>
+    <input type="text" id="inputID" placeholder="Tên ID">
+    <input type="text" id="inputName" placeholder="Tên Động vật">
+    <table border="1" id="table" style="display: none;">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Chức năng</th>
+        </tr>
+        <tbody id="table-body">
+
+        </tbody>
+    </table>
+    <h3 id="result"></h3>
+
+    <script>
+        const animals = [
+            { ID: "Lion", Name: "Sư tử" },
+            { ID: "Fox", Name: "Cáo" },
+            { ID: "Bear", Name: "Gấu" },
+            { ID: "Duck", Name: "Vịt" },
+            { ID: "Fish", Name: "Cá" }
+        ]
+
+        let isTableVisible = false
+
+        function showAnimal() {
+            const table = document.getElementById('table')
+            const btnHienthi = document.getElementById('btnHienthi')
+            const tableBody = document.getElementById('table-body')
+
+            if (!isTableVisible) {
+                table.style.display = 'block'
+                btnHienthi.innerHTML = "Ẩn danh sách"
+                tableBody.innerHTML = ""
+                for (let i = 0; i < animals.length; i++) {
+                    const animal = animals[i]
+                    const row = document.createElement('tr')
+                    row.innerHTML = `
+                        <td>${animal.ID}</td>
+                        <td>${animal.Name}</td>
+                        <td><button onclick="deleteAnimal(${i})">Xóa</button></td>`
+                    tableBody.appendChild(row)
+                }
+                isTableVisible = true
+                result.innerHTML = ''
+            } else {
+                table.style.display = 'none'
+                btnHienthi.innerHTML = "Hiển thị danh sách"
+                isTableVisible = false
+            }
+        }
+
+        function addAnimal() {
+            const inputID = document.getElementById('inputID')
+            const inputName = document.getElementById('inputName')
+            const result = document.getElementById('result')
+            const newID = inputID.value
+            const newName = inputName.value
+
+            if (newID && newName) {
+                const tableBody = document.getElementById('table-body')
+                const row = document.createElement('tr')
+                row.innerHTML = `
+                    <td>${newID}</td>
+                    <td>${newName}</td>
+                    <td><button onclick="deleteAnimal(-1)">Xóa</button></td>`
+                tableBody.appendChild(row)
+
+                animals.push({ ID: newID, Name: newName })
+                inputID.value = ""
+                inputName.value = ""
+                showAnimal()
+                showAnimal()
+                result.innerHTML = 'Thêm thành công'
+                
+            }
+        }
+
+        function deleteAnimal(index) {
+            if (index >= 0 && index < animals.length) {
+                const isConfirmed = confirm("Bạn có chắc chắn muốn xóa loài " + animals[index].Name + "?");
+                if (isConfirmed) {
+                    animals.splice(index, 1);
+                    showAnimal()
+                    showAnimal()
+                    result.innerHTML = 'Xóa thành công'
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
