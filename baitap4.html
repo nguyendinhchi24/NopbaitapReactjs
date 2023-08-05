@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        function username(account) {
+            const pattern = /^[a-z0-9_]{6,}$/;
+            return pattern.test(account);
+        }
+
+        console.log(username("123abc_"));
+        console.log(username("_abc123"));
+        console.log(username("______"));
+        console.log(username("123456"));
+        console.log(username("abcdefg"));
+        console.log(username(".@"));
+        console.log(username("12345"));
+        console.log(username("1234_"));
+        console.log(username("abcde"));
+    </script>
+</body>
+
+</html>
