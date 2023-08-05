@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+
+
+<body>
+
+
+    <input onchange="onChange()" type="number" id="a">
+    <input onchange="onChange()" type="number" id="b">
+
+    <div id="result"></div>
+
+    <script>
+
+        function onChange() {
+            let result = +document.getElementById("a").value + +document.getElementById("b").value
+            console.log(document.getElementById("result").innerHTML= result);
+        }
+
+
+
+        // function snt(number) {
+        //     if (number <= 1) return false
+        //     if (number <= 3) return true
+        //     for (let i = 2; i <= Math.sqrt(number); i++) {
+        //         if (number % i === 0) {
+        //             return false
+        //         }
+        //     }
+        //     return true
+        // }
+
+        // function ktramang(arr) {
+        //     let primes = []
+        //     for (let i = 0; i < arr.length; i++) {
+        //         if (snt(arr[i])) {
+        //             primes.push(arr[i])
+        //         }
+        //     }
+        //     return primes
+        // }
+
+        // let a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        // let o = ktramang(a)
+        // console.log(o)
+
+
+
+
+
+        // function lonhon5(arr) {
+        //     arr.sort(function (a, b) {
+        //         return b - a
+        //     })
+
+        //     let lbSotrung = arr.filter(function (value, index, arrMoi) {
+        //         return arrMoi.indexOf(value) === index
+        //     })
+
+        //     if (lbSotrung.length >= 5) {
+        //         return lbSotrung[4]
+        //     }
+        // }
+
+        // let out = lonhon5([5, 7, 10, 10, 8, 15, 20, 15, 12])
+        // console.log(out)
+
+    </script>
+</body>
+
+</html>

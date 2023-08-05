@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Khi ta bấm submit trong 1 form, trang sẽ được tải lại -->
+    <!-- Việc tải lại trang khi ta bấm submit là hành động mặc định của trình duyệt -->
+    <div style="color:red" id="error"></div>
+    <form onsubmit="submitHandle(this,event)">
+        <input name="full_name" placeholder="Full name"><br>
+        <input name="age" placeholder="Age"><br>
+        <input name="email" placeholder="Email"><br>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const errorDiv = document.querySelector("#error")
+        function submitHandle(form, e) {
+            e.preventDefault() // câu lệnh này sẽ ngăn chặn sự kiện mặc định trên trình duyệt
+            /// tức không cho trang tải lại nữa
+            const inputAll = form.querySelectorAll("input")
+            let errors = "";
+            for (const input of inputAll) {
+                if (input.name === "age") {
+                    if (input.value === "") {
+                        errors  += "Lỗi tuổi không được rỗng"
+                    }
+                    if (+input.value < 0) {
+                        errors += "Lỗi tuổi không được âm"
+
+                    }
+                }
+                if (input.name === "full_name") {
+                    if (input.value === "") {
+                        errors += "Lỗi full name không được rỗng"
+
+                    }
+                }
+                if (input.name === "email") {
+                    if (input.value === "") {
+                        errors += "Lỗi email không được rỗng"
+
+                    }
+                }
+            }
+            
+            errorDiv.innerHTML = errors
+            if(!errors)console.log("Submit dữ liệu")
+            
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        // const ListHocVien = [
+        //     { id: 1, name: "Thanh Loan", age: 19, gender: "nữ" },
+        //     { id: 2, name: "Thiện", age: 21, gender: "nam" },
+        //     { id: 3, name: "San San", age: 20, gender: "nữ" },
+        // ];
+
+        // const ListHocVienMoi = ListHocVien.map((item) => {
+        //     const newItem = {
+        //         id: item.id, name: item.name, age: item.age, gender: item.gender, class: "RJ2307R1"
+        //     };
+        //     return newItem;
+        // });
+
+        // console.log(ListHocVienMoi);
+        // console.log(ListHocVien);
+
+        // const ListSo = [7, 10, 15, 20, 5]
+
+        // const ListSoMoi = ListSo.map(giaiThua)
+
+        // const ListSoFilter = ListSo.filter(item => item > 10)
+
+        // setTimeout và setInterval là một hàm sử dụng callback
+
+        const ListHocVien = [
+            { id: 1, name: "Thanh Loan", age: 19, gender: "nữ" },
+            { id: 2, name: "Thiện", age: 21, gender: "nam" },
+            { id: 3, name: "San San", age: 20, gender: "nữ" },
+        ]
+
+        const ListHocVienMoi = ListHocVien.map((item) => {
+            /// thêm 1 key mới cho item là key class với giá trị là RJ2307R1
+            /// spread attribute
+            const newItem = { ...item, class: "RJ2307R1" }
+            // sao chép ra cái item mới không phải là item cũ
+            /// newItem là một object hoàn toàn riêng biệt với item
+            return newItem
+        })
+
+        // const ListHocVienFilter = ListHocVien.filter((item) => item.age >20)
+        //     /// hàm này phải trả về 1 trong 2 kết quả là true hoặc là fals)
+        // console.log(ListHocVienFilter);
+
+        const listHocVienSort = ListHocVien.sort((a,b)=>a.age - b.age)
+        console.log(listHocVienSort);
+
+    </script>
+</body>
+
+</html>
