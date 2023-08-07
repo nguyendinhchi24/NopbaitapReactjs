@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class ThongTin{
+            constructor(ten, mo_ta) {
+                this.ten = ten
+                this.mo_ta = mo_ta
+            }
+            
+            HamTinhToan(thamso = 1){
+                return thamso * 3
+            }
+        }
+        class HinhHoc extends ThongTin{
+            constructor(ten, mo_ta, chieudai) {
+                super(ten, mo_ta)
+                this.chieudai = chieudai
+            }
+            
+            HamTinhToan(thamso){
+                return thamso * this.chieudai
+            }
+        }
+
+        const HinhCN = new HinhHoc("Hinh Chu Nhat","Hinh co chieu rong = 5", 10)
+        const Hinh_Vuong = new HinhHoc("Hinh Vuong","Hinh co 4 canh bang nhau", 5)
+        console.log('Cac thuoc tinh cua: Hinh Chu Nhat')
+        console.log(HinhCN.ten);
+        console.log(HinhCN.mo_ta);
+        console.log(HinhCN.chieudai);
+        console.log(HinhCN.HamTinhToan(5));
+        console.log("--------------------");
+        console.log("Cac thuoc tinh cua: Hinh vuong")
+        console.log(Hinh_Vuong.ten);
+        console.log(Hinh_Vuong.mo_ta);
+        console.log(Hinh_Vuong.chieudai);
+        console.log(Hinh_Vuong.HamTinhToan(6));
+    </script>
+</body>
+
+</html>
