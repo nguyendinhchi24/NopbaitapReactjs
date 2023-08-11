@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+    <header>
+        <h1>Book List</h1>
+    </header>
+    <div class="container">
+        <div class="form-container">
+            <label for="">Name</label>
+            <input type="text" placeholder="Nhập Name" id="inputname">
+            <label for="">Author</label>
+            <input type="text" placeholder="Nhập Author" id="inputauthor">
+            <button type="submit" id="btnCreate">Create</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="booklist">
+
+            </tbody>
+        </table>
+    </div>
+    <p id="error"></p>
+
+    <script>
+        const token = "eyJuYW1lIjoiTmd1eVx1MWVjNW4gXHUwMTEwXHUwMGVjbmggQ2hcdTAwZWQgKFJKMjMwN1IxKSJ9:d0D45McykLFQet4rlSK7otlQiFdTTznJ6mr9QWb7fwI"
+        const APICaller = axios.create({
+            baseURL: "http://api.iamdien.com:8000/book/",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: {
+                token: token
+            }
+        })
+
+
+        const inputName = document.querySelector("#inputname")
+        const inputAuthor = document.querySelector("#inputauthor")
+        const booklist = document.querySelector("#booklist")
+        const btnCreate = document.querySelector("#btnCreate")
+        const btnUpdate = document.querySelector("#btnUpdate")
+        const error = document.querySelector("#error")
+        const newData = {}
+
+        function clearInputs() {
+            inputName.value = ""
+            inputAuthor.value = ""
+        }
+
+        function hideErro() {
+            error.innerHTML = ''
+        }
+        function showError(messger) {
+            error.innerHTML = messger
+        }
+
+        function showGet() {
+            APICaller.get()
+                .then(res => {
+                    const data = res.data.data
+                    for (const book of data) {
+                        const row = document.createElement('tr')
+                        row.innerHTML = `
+                            <td>${book.id}</td>
+                            <td>${book.name}</td>
+                            <td>${book.author}</td>
+                            <td>
+                                <button class="edit-btn" onclick="editBook(${book.id})">Edit</button>    
+                                <button class="delete-btn" onclick="deleteBook(${book.id})">Xóa</button>    
+                            </td>`
+                        booklist.appendChild(row)
+                    }
+                })
+        }
+        showGet()
+
+        function createBook() {
+            booklist.innerHTML = ''
+            let checkError = ''
+            if (inputName.value === '') {
+                checkError += `Khong duoc de trong Name<br>`
+            }
+            if (inputAuthor.value === '') {
+                checkError += "Khong duoc de trong author"
+            }
+            if (!checkError) {
+                APICaller.post("", {
+                    params: {
+                        name: inputName.value,
+                        author: inputAuthor.value,
+                        image: ""
+                    }
+                })
+                    .then(res => {
+                        showGet()
+                        clearInputs()
+                        showError('Thêm Thành Công')
+                        setTimeout(function () { hideErro() }, 5000)
+
+                    })
+            } else {
+                showError(checkError)
+                showGet()
+            }
+        }
+
+
+
+
+        function editBook(bookID) {
+            APICaller.get()
+                .then(res => {
+                    const data = res.data.data
+                    for (const book of data) {
+                        if (bookID == book.id) {
+                            inputName.value = book.name
+                            inputAuthor.value = book.author
+                            btnCreate.innerHTML= "Update"
+                        }
+                    }
+                })
+                .catch(error => {
+                    showError('Lỗi.');
+                })
+        }
+
+
+        console.log(btnCreate.id);
+        if(btnCreate.id == 'btnCreate'){
+            btnCreate.addEventListener('click', createBook)
+        }
+        
+
+
+        function deleteBook(bookID) {
+            booklist.innerHTML = ''
+            if (confirm("Bạn chắc chắn muốn xóa chứ?")) {
+                APICaller.delete(`${bookID}`)
+                    .then(response => {
+                        showGet()
+                        showError('Xóa thành công')
+                        setTimeout(function () { hideErro() }, 5000)
+                    })
+                    .catch(error => {
+                        showError('Lỗi khi xóa dữ liệu.')
+                    })
+            } else {
+                showGet()
+            }
+        }
+    </script>
+</body>
+
+</html>

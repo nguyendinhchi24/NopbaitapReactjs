@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<style>
+    th,
+    td {
+        width: 190px;
+        text-align: center;
+    }
+    input{
+        margin: 5px ;
+        height: 25px;
+        font-size: 15px;
+    }
+    button{
+        width: 70px;
+        font-size: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+<body>
+    <div style="display: flex; padding: 5px; margin: 0px; width: 1000px;">
+        <input type="text" placeholder="Name" id="inputname">
+        <input type="text" placeholder="Author" id="inputauthor">
+        <button onclick="clickme()" type="submit" id="btnCreate">create</button>
+        <button onclick="upadat()" type="submit" id="btnUpdate" style="display: none;">update</button>
+    </div>
+
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Acction</th>
+            </tr>
+        <tbody id="booklist">
+
+        </tbody>
+        </thead>
+    </table>
+
+    <h3 id="error"></h3>
+    <script>
+        const token = "eyJuYW1lIjoiTmd1eVx1MWVjNW4gXHUwMTEwXHUwMGVjbmggQ2hcdTAwZWQgKFJKMjMwN1IxKSJ9:d0D45McykLFQet4rlSK7otlQiFdTTznJ6mr9QWb7fwI"
+
+        const APICaller = axios.create({
+            baseURL: "http://api.iamdien.com:8000/book/",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                token: token,
+            }
+        })
+
+        const booklist = document.querySelector("#booklist")
+        function goiget() {
+            APICaller.get()
+                .then(res => {
+                    // console.log(res)
+                    const data = res.data.data
+                    for (const book of data) {
+                        const row = document.createElement('tr')
+                        row.innerHTML = `
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td>${book.author}</td>
+                        <td>
+                            <button onclick="updateBook(${book.id})">edit</button>
+                            <button onclick="deleteBook(${book.id})">Xóa</button>
+                        </td>
+                        `
+                        booklist.appendChild(row)
+                    }
+
+                })
+        }
+        goiget()
+
+        function submitBook(e) {
+            e.preventDefault()
+        }
+        
+        function clickme() {
+            booklist.innerHTML = ''
+            const inputname = document.querySelector("#inputname")
+            const inputauthor = document.querySelector("#inputauthor")
+            const error = document.querySelector("#error")
+            let checkerror = ''
+            if (inputname.value === "") {
+                checkerror += `Khong duoc de trong Name<br>`
+            }
+            if (inputauthor.value === "") {
+                checkerror += "Khong duoc de trong author"
+            }
+
+            error.innerHTML = checkerror
+            if (!checkerror) {
+                APICaller.post("", {
+                    params: {
+                        name: inputname.value,
+                        author: inputauthor.value,
+                        image: ""
+                    }
+                })
+                    .then(res => {
+                        console.log(res)
+                        goiget()
+                        inputname.value = ""
+                        inputauthor.value = ""
+                    })
+            }
+        }
+
+
+
+
+        const btnCreate = document.querySelector("#btnCreate")
+        const btnUpdate = document.querySelector("#btnUpdate")
+        function updateBook(bookId) {
+            APICaller.get()
+                .then(res => {
+                    const data = res.data.data
+                    for (const book of data) {
+                        if (bookId == book.id) {
+                            inputname.value = book.name
+                            inputauthor.value = book.author
+                            btnCreate.style.display = "none"
+                            btnUpdate.style.display = "block"
+                        }
+                    }
+                })
+        }
+        
+
+        function deleteBook(bookId) {
+            APICaller.get()
+                .then(res => {
+                    const data = res.data.data
+                    for (const book of data) {
+                        if (bookId == book.id) {
+                            inputname.value = book.name
+                            inputauthor.value = book.author
+                        }
+                    }
+                })
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Axios</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
 </head>
-
 <body>
-    <form onsubmit="searchBook(event)">
-        <div class="row">
-            <div class="col">
-                <input id="searchBook" class="form-control m-2" placeholder="Name" />
-            </div>
-            <div class="col">
-                <input id="searchAuthor" class="form-control m-2" placeholder="Author" />
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-info">Search</button>
-            </div>
-        </div>
-    </form>
 
 
     <form onsubmit="submitBook(event)">
         <div class="row">
             <div class="col">
-                <input id="bookName" class="form-control m-2" name="name" placeholder="Name" />
+                <input id="bookName" class="form-control" name="name" placeholder="Name"/>
             </div>
             <div class="col">
-                <input id="bookAuthor" class="form-control m-2" name="author" placeholder="Author" />
+                <input id="bookAuthor" class="form-control" name="author" placeholder="Author"/>
             </div>
             <div class="col">
                 <button id="submitBookButton" type="submit" class="btn btn-info">Create</button>
+            </div>
+        </div>
+    </form>
+    
+    <hr>
+
+    <form onsubmit="searchBook(event)">
+        <div class="row">
+            <div class="col">
+                <input id="searchName" class="form-control" name="name" placeholder="Name"/>
+            </div>
+            <div class="col">
+                <input id="searchAuthor" class="form-control" name="author" placeholder="Author"/>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-info">Search</button>
             </div>
         </div>
     </form>
@@ -56,6 +55,7 @@
 
         </tbody>
     </table>
+
     <nav aria-label="Page navigation example">
         <ul class="pagination" id="pagination">
             <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -63,18 +63,18 @@
             <li class="page-item"><a class="page-link" href="#">3</a></li>
         </ul>
     </nav>
-
-
     <script>
+        
+        const token = "eyJuYW1lIjoiTmd1eVx1MWVjNW4gXHUwMTEwXHUwMGVjbmggQ2hcdTAwZWQgKFJKMjMwN1IxKSJ9:d0D45McykLFQet4rlSK7otlQiFdTTznJ6mr9QWb7fwI"
+
         const booklist = document.querySelector("#booklist")
         const bookName = document.querySelector("#bookName")
         const bookAuthor = document.querySelector("#bookAuthor")
         const submitBookButton = document.querySelector("#submitBookButton")
+        var number = 0
         var chooseBook = null
         var data = []
-        var number = 0
 
-        const token = 'eyJuYW1lIjoiTmd1eVx1MWVjNW4gXHUwMTEwXHUwMGVjbmggQ2hcdTAwZWQgKFJKMjMwN1IxKSJ9:d0D45McykLFQet4rlSK7otlQiFdTTznJ6mr9QWb7fwI'
         const APICaller = axios.create({
             baseURL: "http://api.iamdien.com:8000/book/",
             headers: {
@@ -87,14 +87,14 @@
 
         function callGetAPI() {
             APICaller.get()
-                .then(res => {
-                    data = res.data.data
-                    console.log(data);
-                    createTable()
-                })
+            .then(res=>{
+                console.log(res)
+                data = res.data.data
+                number = res.data.number
+                createTable()
+            })
         }
         
-        callGetAPI()
 
         function createTable() {
             booklist.innerHTML = "" /// data là 1 array
@@ -106,14 +106,16 @@
                     <td>${book.author}</td>
                     <td>
                         <button class="btn btn-${(book.id !== chooseBook) ? 'primary' : 'secondary'}" onclick="editBook(${book.id},'${book.name}','${book.author}')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteBook(${book.id})">Delete</button>
+                        <button class="btn btn-danger" onclick=deleteBook(${book.id})>Delete</button>
                     </td>
                 `
                 booklist.append(newTr)
             }
+            createPagination()
         }
 
-
+        callGetAPI()
+    
         function submitBook(e) {
             e.preventDefault()
             const inputAll = e.target.querySelectorAll("input")
@@ -139,60 +141,56 @@
             newBook.image = ""
             if (error.length == 0) {
                 if (chooseBook === null) {
-                    APICaller.post("", { "params": newBook })
-                        .then(res => {
-                            data.unshift(res.data.data[0])
-                            createTable()
-                        })
+                    APICaller.post("",{"params":newBook})
+                    .then(res=>{
+                        data.unshift(res.data.data[0])
+                        createTable()
+                    })
                 } else {
-                    APICaller.patch(chooseBook.toString(), { "params": newBook })
-                        .then(res => {
-                            const index = data.findIndex(item => item.id === chooseBook)
-                            data[index] = res.data.data[0]
-                            cancelEdit()
-                        })
+                    APICaller.patch(chooseBook.toString(),{"params":newBook})
+                    .then(res=>{
+                        const index = data.findIndex(item=>item.id===chooseBook)
+                        data[index] = res.data.data[0]
+                        createTable()
+                        chooseBook = null
+                        bookName.value = ""
+                        bookAuthor.value = ""
+                        submitBookButton.innerHTML = "Create"
+                    })
                 }
             }
         }
 
-        function clearInput() {
-            bookName.value = ""
-            bookAuthor.value = ""
-        }
-
-        function cancelEdit() {
-            chooseBook = null
-            submitBookButton.innerHTML = "Create"
-            clearInput()
-            createTable()
-        }
-
-        function editBook(id, name, author) {
-            if (chooseBook === id) {
-                cancelEdit()
-            } else {
+        function editBook(id,name,author) {
+            /// nếu như đã chọn sách đó rồi, mà chọn nữa thì sẽ bỏ chọn
+            if (id === chooseBook) {
+                bookName.value = ""
+                bookAuthor.value = ""
+                submitBookButton.innerHTML = "Create"
+                chooseBook = null
+            }
+            else {
                 bookName.value = name
                 bookAuthor.value = author
                 submitBookButton.innerHTML = "Update"
                 chooseBook = id
-                createTable()
             }
+            
+            createTable()
         }
 
         function deleteBook(id) {
-            if (confirm("xoa ok k")) {
-                APICaller.delete(`${id}`)
-                    .then(response => {
-                        data = data.filter(book => book.id !== id)
-                        createTable()
-                    })
-            }
+            APICaller.delete(id.toString())
+            .then(res=>{
+                data = data.filter(item=>item.id !== id)
+                createTable()
+            })
         }
 
-        const searchName = document.querySelector("#searchName")
-        const searchAuthor = document.querySelector("#searchAuthor")
-        function searchBook(e){
+        function searchBook(e) {
             e.preventDefault()
+            const searchName = document.querySelector("#searchName")
+            const searchAuthor = document.querySelector("#searchAuthor")
             APICaller.get("",{params:{
                 name: searchName.value,
                 author: searchAuthor.value
@@ -222,5 +220,4 @@
         //// method patch yêu cầu id cuốn sách
     </script>
 </body>
-
 </html>
